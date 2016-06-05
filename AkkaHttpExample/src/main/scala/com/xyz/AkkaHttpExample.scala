@@ -7,11 +7,12 @@ import akka.stream._
 
 trait SampleApp {
   implicit val system = ActorSystem("akka-http-sample")
+  implicit val materializer = ActorMaterializer()
+
   sys.addShutdownHook({
     system.terminate()
   })
 
-  implicit val materializer = ActorMaterializer()
 
   val route =
     path("hello") {

@@ -63,4 +63,20 @@ class TicTacToeTest extends FunSuite with Matchers {
     board.updatePosition(Position(2, 0, playerOne.symbol))
     assert(board.winner.contains(playerOne))
   }
+
+  test("should be able to declare winner if 3 moves diagonally") {
+    val playerOne = Player("X")
+    val playerTwo = Player("0")
+    val board = new Board(playerOne, playerTwo)
+    board.updatePosition(Position(0, 0, playerOne.symbol))
+    assert(board.winner.isEmpty)
+    board.updatePosition(Position(0, 1, playerTwo.symbol))
+    assert(board.winner.isEmpty)
+    board.updatePosition(Position(1, 1, playerOne.symbol))
+    assert(board.winner.isEmpty)
+    board.updatePosition(Position(1, 0, playerTwo.symbol))
+    assert(board.winner.isEmpty)
+    board.updatePosition(Position(2, 2, playerOne.symbol))
+    assert(board.winner.contains(playerOne))
+  }
 }

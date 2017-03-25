@@ -4,8 +4,10 @@ class Board(playerOne: Player, playerTwo: Player) {
   def checkAvailable(position: Position) = getPosition(position).symbol == null
 
   def checkWinner(currentPosition: Position) = {
-    if (positions.filter(_.x == currentPosition.x).forall(_.symbol == currentPosition.symbol) ||
-      positions.filter(_.y == currentPosition.y).forall(_.symbol == currentPosition.symbol))
+    val winningCondition = (pos:Position) => pos.symbol == currentPosition.symbol
+    if (positions.filter(_.x == currentPosition.x).forall(winningCondition) ||
+      positions.filter(_.y == currentPosition.y).forall(winningCondition) ||
+      positions.filter(p => p.x == p.y).forall(winningCondition))
       winner = Some(currentPlayer)
   }
 

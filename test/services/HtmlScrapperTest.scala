@@ -34,5 +34,94 @@ class HtmlScrapperTest extends PlaySpec {
 
       htmlVersion must equal(None)
     }
+
+    "return page title if present" in {
+      val htmlWithPageTitle =
+        """
+          |<!doctype html>
+          |<html>
+          |<head>
+          |    <title>Example Domain</title>
+          |</head>
+          |<body />
+          |</html>
+        """.stripMargin
+
+      val pageTitle = new HtmlScrapper(Jsoup.parse(htmlWithPageTitle)).getPageTitle
+
+      pageTitle must equal("Example Domain")
+    }
+
+    "return number of headings grouped by heading level" in {
+      val htmlWithHeadings =
+        """
+          |<!doctype html>
+          |<html>
+          |<head />
+          |<body>
+          |<div>
+          |    <h1>Heading type 1 - first</h1>
+          |    <h2>Heading type 2</h2>
+          |    <h6>Heading type 6</h3>
+          |    <h1>Heading 1 - second</h1>
+          |</div>
+          |</body>
+          |</html>
+          |""".stripMargin
+
+      val headings = new HtmlScrapper(Jsoup.parse(htmlWithHeadings)).getHeadingGroupedByCount
+
+      headings("h1") must equal(2)
+      headings("h2") must equal(1)
+      headings("h6") must equal(1)
+    }
+
+    "return no of links grouped into internal/external" in {
+      val html =
+        """
+          |<!doctype html>
+          |<html>
+          |<head />
+          |<body>
+          |<div>
+          |   <p><a href="http://www.internal.com/internal1">More information...</a></p>
+          |   <p><a href="http://internal.com/internal2">More information...</a></p>
+          |   <p><a href="/internal3">More information...</a></p>
+          |
+          |   <p><a href="http://www.external.com/external1">More information...</a></p>
+          |   <p><a href="http://subdomain.external.com/external2">More information...</a></p>
+          |</div>
+          |</body>
+          |</html>
+          |""".stripMargin
+
+      val links = new HtmlScrapper(Jsoup.parse(html)).getLinks
+
+      links.size must equal(5)
+      links must equal(List("http://www.internal.com/internal1", "http://internal.com/internal2",
+        "/internal3", "http://www.external.com/external1", "http://subdomain.external.com/external2"))
+    }
+
+    "return if form is present as 'form' element" in {
+      val html =
+        """
+          |<!doctype html>
+          |<html>
+          |<head />
+          |<body>
+          |<div>
+          |   <form action="/example">
+          |     <input name="firstname" type="text"/>
+          |     <input type="submit">Submit</input>
+          |   </form>
+          |</div>
+          |</body>
+          |</html>
+          |""".stripMargin
+
+      val containsForm = new HtmlScrapper(Jsoup.parse(html)).containsForm
+
+      containsForm must equal(true)
+    }
   }
 }

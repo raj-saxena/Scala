@@ -1,11 +1,20 @@
 package controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
-import play.api.mvc.{AbstractController, ControllerComponents}
+import forms.WebUrlInputForm
+import play.api.mvc.{AnyContent, _}
 
-class AnalysisController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
-  def index() = Action {
-    Ok(views.html.analyze())
+@Singleton
+class AnalysisController @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
+  private val postUrl = routes.AnalysisController.analyze()
+
+  def index = Action { implicit request: MessagesRequest[AnyContent] =>
+    // Pass an unpopulated form to the template
+    Ok(views.html.analyze(postUrl, WebUrlInputForm.form, Seq()))
+  }
+
+  def analyze = Action { implicit request: MessagesRequest[AnyContent] =>
+    Ok(views.html.analyze(postUrl, WebUrlInputForm.form, Seq()))
   }
 }

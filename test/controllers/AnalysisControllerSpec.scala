@@ -2,6 +2,7 @@ package controllers
 
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.mvc.MessagesControllerComponents
 import play.api.test._
 import play.api.test.Helpers._
 
@@ -11,7 +12,8 @@ class AnalysisControllerSpec extends PlaySpec with GuiceOneAppPerSuite with Inje
   val url = "/analyze"
   "AnalysisController GET" should  {
     "render the index page from a new instance of controller" in {
-      val controller = new AnalysisController(stubControllerComponents())
+      val messagesControllerComponents = inject[MessagesControllerComponents]
+      val controller = new AnalysisController(messagesControllerComponents)
       val analysePage = controller.index().apply(FakeRequest(GET, url))
 
       status(analysePage) mustBe OK

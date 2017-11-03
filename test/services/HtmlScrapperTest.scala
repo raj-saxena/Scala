@@ -123,5 +123,65 @@ class HtmlScrapperTest extends PlaySpec {
 
       containsForm must equal(true)
     }
+
+    "return if form submission is present as javascript" in {
+      val html =
+        """
+          |<!doctype html>
+          |<html>
+          |<head>
+          | <script>
+          |   function onClickHandler() {
+          |     var request = new XMLHttpRequest();
+          |     request.open('POST', "https://example.com/submit");
+          |     request.send("test");
+          |   }
+          | </script>
+          |</head>
+          |<body>
+          |<div>
+          | <input name="firstname" type="text"/>
+          | <input type="submit" onClick="onClickHandler()">Submit</input>
+          |</div>
+          |</body>
+          |</html>
+          |""".stripMargin
+
+      val containsForm = new HtmlScrapper(Jsoup.parse(html)).containsForm
+
+      containsForm must equal(true)
+    }
+
+    "return if form submission is present as jquery ajax " in {
+      val html =
+        """
+          |<!DOCTYPE html>
+          |<html>
+          |<head>
+          |<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+          |<script>
+          |$(document).ready(function(){
+          |    $("button").click(function(){
+          |        $.ajax({url: "demo_test.txt", success: function(result){
+          |            $("#div1").html(result);
+          |        }});
+          |    });
+          |});
+          |</script>
+          |</head>
+          |<body>
+          |
+          |<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+          |
+          |<button>Get External Content</button>
+          |
+          |</body>
+          |</html>
+          |""".stripMargin
+
+      val containsForm = new HtmlScrapper(Jsoup.parse(html)).containsForm
+
+      containsForm must equal(true)
+    }
   }
 }

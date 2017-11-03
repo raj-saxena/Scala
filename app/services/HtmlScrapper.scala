@@ -6,7 +6,24 @@ import org.jsoup.select.Elements
 import scala.collection.JavaConverters
 
 class HtmlScrapper(private val document: Document) {
-  def containsForm = document.select("form").size() > 0
+  private val jsPattern = """(?s)new XMLHttpRequest().*.open\(("|')POST("|')""".r
+  private val jqueryPattern = """(?s)\$.ajax""".r
+
+  def containsRequestInScript() = {
+    val script = document.getElementsByTag("script")
+    val xmlHttpRequest = jsPattern.findFirstIn(script.html())
+
+    xmlHttpRequest.isDefined
+  }
+
+  def containsJqueryRequestInScript() = {
+    val script = document.getElementsByTag("script")
+    val ajaxRequest = jqueryPattern.findFirstIn(script.html())
+
+    script.attr("src").contains("jquery") && ajaxRequest.isDefined
+  }
+
+  def containsForm = document.select("form").size() > 0 || containsRequestInScript() || containsJqueryRequestInScript()
 
   def getLinks = JavaConverters.collectionAsScalaIterable(document.select("a[href]")).map(_.attr("href"))
 

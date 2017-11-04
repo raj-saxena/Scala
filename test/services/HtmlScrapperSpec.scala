@@ -3,7 +3,7 @@ package services
 import org.jsoup.Jsoup
 import org.scalatestplus.play.PlaySpec
 
-class HtmlScrapperTest extends PlaySpec {
+class HtmlScrapperSpec extends PlaySpec {
   "HTML scrapper service" should {
     "return html version empty if present" in {
       val html =

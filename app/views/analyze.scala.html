@@ -11,10 +11,16 @@
 <body>
 <div class="container">
     <div class="url_form">
+        @if(form.hasGlobalErrors) {
+            @for(error <- form.globalErrors) {
+                <div class="text-danger">@error.format</div>
+            }
+        }
         @helper.form(postUrl) {
             @helper.inputText(form("url"), '_label->"Enter the url to analyze:")
             <input class="btn btn-primary" type="submit" value="Analyze!" />
         }
+
     </div>
     <br>
     <div class="table-responsive">

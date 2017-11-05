@@ -1,5 +1,6 @@
 package services
 
+import forms.WebUrlInputForm.Data
 import models.LinkValidResponse
 import org.scalatestplus.play.PlaySpec
 import play.api.mvc.Results

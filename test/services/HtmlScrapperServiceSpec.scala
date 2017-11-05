@@ -3,7 +3,7 @@ package services
 import org.jsoup.Jsoup
 import org.scalatestplus.play.PlaySpec
 
-class HtmlScrapperSpec extends PlaySpec {
+class HtmlScrapperServiceSpec extends PlaySpec {
   "HTML scrapper service" should {
     "return html version empty if present" in {
       val html =
@@ -15,7 +15,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |
         """.stripMargin
-      val htmlVersion = new HtmlScrapper(Jsoup.parse(html)).getHTMLVersion
+      val htmlVersion = new HtmlScrapperService(Jsoup.parse(html)).getHTMLVersion
 
       htmlVersion must equal(Some("-//W3C//DTD HTML 4.01//EN"))
     }
@@ -30,7 +30,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |
         """.stripMargin
-      val htmlVersion = new HtmlScrapper(Jsoup.parse(html)).getHTMLVersion
+      val htmlVersion = new HtmlScrapperService(Jsoup.parse(html)).getHTMLVersion
 
       htmlVersion must equal(None)
     }
@@ -47,7 +47,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
         """.stripMargin
 
-      val pageTitle = new HtmlScrapper(Jsoup.parse(htmlWithPageTitle)).getPageTitle
+      val pageTitle = new HtmlScrapperService(Jsoup.parse(htmlWithPageTitle)).getPageTitle
 
       pageTitle must equal("Example Domain")
     }
@@ -69,7 +69,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |""".stripMargin
 
-      val headings = new HtmlScrapper(Jsoup.parse(htmlWithHeadings)).getHeadingGroupedByCount
+      val headings = new HtmlScrapperService(Jsoup.parse(htmlWithHeadings)).getHeadingGroupedByCount
 
       headings("h1") must equal(2)
       headings("h2") must equal(1)
@@ -95,7 +95,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |""".stripMargin
 
-      val links = new HtmlScrapper(Jsoup.parse(html)).getLinks
+      val links = new HtmlScrapperService(Jsoup.parse(html)).getLinks
 
       links.size must equal(5)
       links must equal(List("http://www.internal.com/internal1", "http://internal.com/internal2",
@@ -119,7 +119,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |""".stripMargin
 
-      val containsForm = new HtmlScrapper(Jsoup.parse(html)).containsForm
+      val containsForm = new HtmlScrapperService(Jsoup.parse(html)).containsForm
 
       containsForm must equal(true)
     }
@@ -147,7 +147,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |""".stripMargin
 
-      val containsForm = new HtmlScrapper(Jsoup.parse(html)).containsForm
+      val containsForm = new HtmlScrapperService(Jsoup.parse(html)).containsForm
 
       containsForm must equal(true)
     }
@@ -179,7 +179,7 @@ class HtmlScrapperSpec extends PlaySpec {
           |</html>
           |""".stripMargin
 
-      val containsForm = new HtmlScrapper(Jsoup.parse(html)).containsForm
+      val containsForm = new HtmlScrapperService(Jsoup.parse(html)).containsForm
 
       containsForm must equal(true)
     }

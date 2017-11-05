@@ -11,6 +11,7 @@ libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
 libraryDependencies += "org.jsoup" % "jsoup" % "1.10.3"
 libraryDependencies += ws
+libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % Test
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

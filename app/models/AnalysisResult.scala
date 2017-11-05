@@ -1,5 +1,3 @@
 package models
 
-class AnalysisResult {
-
-}
+case class AnalysisResult(htmlVersion: Option[String])

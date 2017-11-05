@@ -6,7 +6,8 @@ import forms.WebUrlInputForm
 import play.api.mvc.{AnyContent, _}
 
 @Singleton
-class AnalysisController @Inject()(cc: MessagesControllerComponents) extends MessagesAbstractController(cc) {
+class AnalysisController @Inject()(cc: MessagesControllerComponents)
+  extends MessagesAbstractController(cc) {
   private val postUrl = routes.AnalysisController.analyze()
 
   def index = Action { implicit request: MessagesRequest[AnyContent] =>

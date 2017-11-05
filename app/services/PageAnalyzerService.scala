@@ -4,17 +4,23 @@ import java.net.URI
 import javax.inject.{Inject, Singleton}
 
 import models.{AnalysisResult, LinkValidResponse}
+import org.jsoup.Jsoup
 
 import scala.concurrent.Await
 
 @Singleton
-class PageAnalyzerService @Inject()(htmlScrapperService: HtmlScrapperService, wsClientService: WSClientService) {
+class PageAnalyzerService @Inject()(wsClientService: WSClientService) {
 
   import scala.concurrent.duration._
 
   def getLinkValidationResponse(links: Set[String]): Set[LinkValidResponse] = links.map(l => Await.result(wsClientService.getLinkValidResponse(l), 5.seconds))
 
+  var htmlScrapperService: HtmlScrapperService = _
+
   def analyze(url: String): AnalysisResult = {
+    if (htmlScrapperService == null) {
+      htmlScrapperService = new HtmlScrapperService(Jsoup.connect(url).get())
+    }
     val domain = new URI(url).getHost
     val htmlVersion = htmlScrapperService.getHTMLVersion
     val pageTitle = htmlScrapperService.getPageTitle

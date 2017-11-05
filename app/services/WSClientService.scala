@@ -1,12 +1,13 @@
 package services
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import models.LinkValidResponse
 import play.api.libs.ws.WSClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class WSClientService @Inject()(wsClient: WSClient)(implicit ec: ExecutionContext) {
   def getLinkValidResponse(link: String): Future[LinkValidResponse] = wsClient.url(link)
     .withFollowRedirects(true)

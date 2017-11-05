@@ -5,8 +5,8 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class PageAnalyzerServiceSpec extends PlaySpec with MockitoSugar {
   val url = "http://www.example.com"
@@ -37,7 +37,9 @@ class PageAnalyzerServiceSpec extends PlaySpec with MockitoSugar {
       val expectedAnalysisResult = AnalysisResult(Some(htmlVersion), pageTitle, headingsGroupedByCount, linksByType, containsForm,
         Set(internalLinkValidationResponse, externalLinkValidationResponse))
 
-      val analysisResult = new PageAnalyzerService(htmlScrapperService, wsClientService).analyze(url)
+      val pageAnalyzerService = new PageAnalyzerService(wsClientService)
+      pageAnalyzerService.htmlScrapperService = htmlScrapperService
+      val analysisResult = pageAnalyzerService.analyze(url)
 
       analysisResult must equal(expectedAnalysisResult)
       verify(htmlScrapperService).getHTMLVersion

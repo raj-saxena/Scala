@@ -1,3 +1,3 @@
 package models
 
-case class AnalysisResult(htmlVersion: Option[String])
+case class AnalysisResult(htmlVersion: Option[String], pageTitle: String)

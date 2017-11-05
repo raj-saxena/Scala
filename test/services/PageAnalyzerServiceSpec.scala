@@ -12,14 +12,17 @@ class PageAnalyzerServiceSpec extends PlaySpec with MockitoSugar {
   "PageAnalyzerService" should {
     val htmlScrapperService = mock[HtmlScrapperService]
 
-    "extract html version of document" in {
+    "extract html version and page title of document" in {
       val htmlVersion = "some html version"
       when(htmlScrapperService.getHTMLVersion) thenReturn Option(htmlVersion)
+      val pageTitle = "some pageTitle"
+      when(htmlScrapperService.getPageTitle) thenReturn pageTitle
 
       val analysisResult = new PageAnalyzerService(htmlScrapperService).analyze(url)
 
-      analysisResult must equal(AnalysisResult(Some(htmlVersion)))
-      verify(htmlScrapperService) getHTMLVersion
+      analysisResult must equal(AnalysisResult(Some(htmlVersion), pageTitle))
+      verify(htmlScrapperService).getHTMLVersion
+      verify(htmlScrapperService).getPageTitle
     }
   }
 }

@@ -17,6 +17,7 @@ class WSClientServiceSpec extends PlaySpec {
 
   "WSClientService" should {
     import Results._
+    val link = "/link1"
     "return LinkValidResponse for success" in {
       val html =
         """
@@ -38,14 +39,13 @@ class WSClientServiceSpec extends PlaySpec {
       } { implicit port =>
         WsTestClient.withClient { client =>
           val result = Await.result(
-            new WSClientService(client).getLinkValidResponse("/link1"), 10.seconds)
-          result must equal(LinkValidResponse(true, None))
+            new WSClientService(client).getLinkValidResponse(link), 10.seconds)
+          result must equal(LinkValidResponse(link, true, None))
         }
       }
     }
 
     "return LinkValidResponse for failure" in {
-      val link = "/link1"
       val errorMsg = "Internal Server Error"
       Server.withRouterFromComponents() { components =>
         import components.{defaultActionBuilder => Action}
@@ -58,7 +58,7 @@ class WSClientServiceSpec extends PlaySpec {
         WsTestClient.withClient { client =>
           val result = Await.result(
             new WSClientService(client).getLinkValidResponse(link), 10.seconds)
-          result must equal(LinkValidResponse(false, Some(errorMsg)))
+          result must equal(LinkValidResponse(link, false, Some(errorMsg)))
         }
       }
     }

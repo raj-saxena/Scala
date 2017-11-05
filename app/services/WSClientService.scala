@@ -12,10 +12,10 @@ class WSClientService @Inject()(wsClient: WSClient)(implicit ec: ExecutionContex
     .withFollowRedirects(true)
     .get()
     .map(r => r.status match {
-      case 200 => LinkValidResponse(true, None)
-      case _ => LinkValidResponse(false, Some(r.statusText))
+      case 200 => LinkValidResponse(link, true, None)
+      case _ => LinkValidResponse(link, false, Some(r.statusText))
     })
     .recover {
-      case e: Exception => LinkValidResponse(false, Option(e.getMessage))
+      case e: Exception => LinkValidResponse(link, false, Option(e.getMessage))
     }
 }

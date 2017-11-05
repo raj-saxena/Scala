@@ -95,11 +95,13 @@ class HtmlScrapperServiceSpec extends PlaySpec {
           |</html>
           |""".stripMargin
 
-      val links = new HtmlScrapperService(Jsoup.parse(html)).getLinks
+      val document = Jsoup.parse(html)
+      document.setBaseUri("http://www.internal.com")
+      val links = new HtmlScrapperService(document).getLinks
 
       links.size must equal(5)
       links must equal(Set("http://www.internal.com/internal1", "http://internal.com/internal2",
-        "/internal3", "http://www.external.com/external1", "http://subdomain.external.com/external2"))
+        "http://www.internal.com/internal3", "http://www.external.com/external1", "http://subdomain.external.com/external2"))
     }
 
     "return if form is present as 'form' element" in {

@@ -1,5 +1,7 @@
 package controllers
 
+import models.AnalysisResult
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -7,7 +9,6 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
 import play.api.test._
 import services.PageAnalyzerService
-import org.mockito.Mockito._
 
 class AnalysisControllerSpec extends PlaySpec with GuiceOneAppPerSuite with Injecting with MockitoSugar {
   private val pageAnalyzerService = mock[PageAnalyzerService]
@@ -46,6 +47,7 @@ class AnalysisControllerSpec extends PlaySpec with GuiceOneAppPerSuite with Inje
       val messagesControllerComponents = inject[MessagesControllerComponents]
       val controller = new AnalysisController(messagesControllerComponents, pageAnalyzerService)
       val urlToAnalyze = "http://www.example.com"
+      when(pageAnalyzerService.analyze(urlToAnalyze)) thenReturn AnalysisResult(Some(""), "", Map(), Map(), false, Set())
       val analysePage = controller.analyze.apply(FakeRequest(POST, url)
         .withFormUrlEncodedBody("url" -> urlToAnalyze))
 

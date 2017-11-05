@@ -11,11 +11,12 @@ import services.PageAnalyzerService
 @Singleton
 class AnalysisController @Inject()(cc: MessagesControllerComponents, pageAnalyzerService: PageAnalyzerService)
   extends MessagesAbstractController(cc) {
-  val logger: Logger = Logger(this.getClass())
+  val logger: Logger = Logger(this.getClass)
   private val postUrl = routes.AnalysisController.analyze()
 
   def index = Action { implicit request: MessagesRequest[AnyContent] =>
     // Pass an unpopulated form to the template
+    logger.info("Serving form")
     Ok(views.html.analyze(postUrl, WebUrlInputForm.form, None))
   }
 
@@ -27,9 +28,17 @@ class AnalysisController @Inject()(cc: MessagesControllerComponents, pageAnalyze
       urlData => {
         val url = urlData.url
         logger.info("url received =>" + url)
-        val analysisResult = pageAnalyzerService.analyze(url)
-        logger.info(s"AnalysisResult for $url => $analysisResult")
+        val analysisResult = time(pageAnalyzerService.analyze(url), url)
+
         Ok(views.html.analyze(postUrl, WebUrlInputForm.form, Some(analysisResult)))
       })
+  }
+
+  def time[A](process: => A, url:String) = {
+    val now = System.currentTimeMillis()
+    val result = process
+    val micros = (System.currentTimeMillis() - now) / 1000
+    logger.info(s"Time taken to analyse $url = $micros seconds")
+    result
   }
 }

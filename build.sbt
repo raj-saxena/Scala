@@ -12,6 +12,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2
 libraryDependencies += "org.jsoup" % "jsoup" % "1.10.3"
 libraryDependencies += ws
 libraryDependencies += "org.mockito" % "mockito-all" % "1.9.5" % Test
+libraryDependencies += ehcache
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

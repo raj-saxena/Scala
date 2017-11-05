@@ -10,10 +10,57 @@
 </head>
 <body>
 <div class="container">
-    @helper.form(postUrl) {
-        @helper.inputText(form("url"), '_label->"Enter the url to analyze:")
-        <input class="btn btn-primary" type="submit" value="Analyze!" />
-    }
+    <div class="url_form">
+        @helper.form(postUrl) {
+            @helper.inputText(form("url"), '_label->"Enter the url to analyze:")
+            <input class="btn btn-primary" type="submit" value="Analyze!" />
+        }
+    </div>
+    <br>
+    <div class="table-responsive">
+        @analysisResult.map(ar =>
+        <table class="table table-striped">
+            <tr>
+                <th>HTML version</th><th>Page Title</th><th>Heading count</th><th>Links</th><th>Has form(s)</th><th>Links reachable</th>
+            </tr>
+            <tr>
+                <td>{ar.htmlVersion}</td>
+                <td>{ar.pageTitle}</td>
+                <td>
+                    <ul>
+                        {ar.headingsGroupedByCount.map {case (h,c) => <li><div>{h} - {c}</div></li> }}
+                    </ul>
+                </td>
+                <td>
+                        {ar.linksByType.map { case (k, ls) =>
+                            <div>{k}</div>
+                            <div>
+                                <ul>
+                                    {ls.map(l => <li>{l}</li>)}
+                                </ul>
+                            </div>
+                        }}
+
+                </td>
+                <td>
+                    {ar.containsForm}
+                </td>
+                <td>
+                    <ul>
+                        {ar.linkValidationResponses.map(r =>
+                        <li>
+                            <div>
+                                <div>{r.url}</div>
+                                <div>Reachable: {r.isReachable}</div>
+                                {if(r.failureReason.isDefined) <div>Errors: r.failureReason.get </div>}
+                            </div>
+                        </li>)}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        )
+    </div>
 </div>
 
 <script src="@routes.Assets.versioned("javascripts/main.js")" type="text/javascript"></script>

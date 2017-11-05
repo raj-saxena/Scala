@@ -13,7 +13,7 @@ class PageAnalyzerService @Inject()(wsClientService: WSClientService) {
 
   import scala.concurrent.duration._
 
-  def getLinkValidationResponse(links: Set[String]): Set[LinkValidResponse] = links.map(l => Await.result(wsClientService.getLinkValidResponse(l), 5.seconds))
+  def getLinkValidationResponse(links: Set[String]): Set[LinkValidResponse] = links.map(l => Await.result(wsClientService.getLinkValidResponse(l), 15.seconds))
 
   var htmlScrapperService: HtmlScrapperService = _
 
@@ -28,6 +28,7 @@ class PageAnalyzerService @Inject()(wsClientService: WSClientService) {
     val links = htmlScrapperService.getLinks
     val containsForm = htmlScrapperService.containsForm
     val linkValidationResponses = getLinkValidationResponse(links)
+    htmlScrapperService = null
     AnalysisResult(htmlVersion, pageTitle, headingGroupedByCount, getLinksByType(links, domain), containsForm, linkValidationResponses)
   }
 

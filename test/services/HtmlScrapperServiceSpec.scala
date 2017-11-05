@@ -98,7 +98,7 @@ class HtmlScrapperServiceSpec extends PlaySpec {
       val links = new HtmlScrapperService(Jsoup.parse(html)).getLinks
 
       links.size must equal(5)
-      links must equal(List("http://www.internal.com/internal1", "http://internal.com/internal2",
+      links must equal(Set("http://www.internal.com/internal1", "http://internal.com/internal2",
         "/internal3", "http://www.external.com/external1", "http://subdomain.external.com/external2"))
     }
 

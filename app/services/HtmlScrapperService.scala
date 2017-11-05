@@ -25,7 +25,7 @@ class HtmlScrapperService(private val document: Document) {
 
   def containsForm: Boolean = document.select("form").size() > 0 || containsRequestInScript() || containsJqueryRequestInScript()
 
-  def getLinks: Iterable[String] = JavaConverters.collectionAsScalaIterable(document.select("a[href]")).map(_.attr("href"))
+  def getLinks: Set[String] = JavaConverters.collectionAsScalaIterable(document.select("a[href]")).map(_.attr("href")).toSet
 
   def getHeadingGroupedByCount: Map[String, Int] = {
     val allHeadings: Elements = document.select("h1, h2, h3, h4, h5, h6")
